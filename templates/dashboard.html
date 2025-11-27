@@ -135,7 +135,7 @@
 
                 // Generate grid URL based on scene index
                 const sceneIndex = Object.keys(sceneConfig).indexOf(sceneId);
-                const gridUrl = `grids/scene-${sceneIndex + 1}.html`;
+                const gridUrl = `../grids/scene-${sceneIndex + 1}.html`;
 
                 const videoPath = winner ? getVideoPath(sceneId, winner.winner) : '';
 
@@ -193,5 +193,11 @@
             renderDashboard();
         });
     </script>
+
+    <div class="footer">
+        <p class="footer-text">
+            Created by <a href="https://youtube.com/@jordanUrbsAI" target="_blank" style="color: var(--venice-canal-light); text-decoration: none; border-bottom: 1px solid var(--venice-red); transition: all 0.3s ease;">Jordan Urbs</a>
+        </p>
+    </div>
 </body>
 </html>
