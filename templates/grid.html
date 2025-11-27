@@ -66,7 +66,7 @@
             top: 140px;
             left: 0;
             right: 0;
-            bottom: 50px;
+            bottom: 0;
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             grid-template-rows: repeat(3, 1fr);
@@ -154,26 +154,6 @@
             outline-offset: -4px;
             box-shadow: 0 0 20px rgba(221, 51, 0, 0.8);
         }
-
-        /* Footer - Fixed to bottom */
-        .footer {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: rgba(14, 41, 66, 0.95);
-            backdrop-filter: blur(10px);
-            padding: 16px 40px;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            z-index: 50;
-            text-align: center;
-        }
-
-        .footer-text {
-            color: var(--venice-canal-mid);
-            font-size: 12px;
-            margin: 0;
-        }
     </style>
 </head>
 <body>
@@ -209,11 +189,5 @@
             });
         });
     </script>
-
-    <div class="footer">
-        <p class="footer-text">
-            Created by <a href="https://youtube.com/@jordanUrbsAI" target="_blank" style="color: var(--venice-canal-light); text-decoration: none; border-bottom: 1px solid var(--venice-red); transition: all 0.3s ease;">Jordan Urbs</a>
-        </p>
-    </div>
 </body>
 </html>
