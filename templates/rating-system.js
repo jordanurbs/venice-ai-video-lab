@@ -143,15 +143,15 @@ function injectModal() {
       position: absolute;
       top: 12px;
       left: 12px;
-      background: rgba(0, 0, 0, 0.9);
-      color: #C8E3FD;
+      background: #FFC107;
+      color: #000000;
       padding: 8px 12px;
       border-radius: 6px;
       font-size: 12px;
       font-weight: 600;
       z-index: 16;
       cursor: pointer;
-      border: 1px solid rgba(200, 227, 253, 0.3);
+      border: 1px solid #FFB300;
       transition: all 0.3s ease;
       opacity: 0;
       pointer-events: none;
@@ -161,8 +161,8 @@ function injectModal() {
       pointer-events: auto;
     }
     .view-full-button:hover {
-      background: rgba(200, 227, 253, 0.2);
-      border-color: #C8E3FD;
+      background: #FFB300;
+      border-color: #FF9800;
     }
   `;
   document.head.appendChild(style);
@@ -239,7 +239,7 @@ function initializeGrid(sceneId) {
     // Create "WINNER" button
     const winnerBtn = document.createElement('button');
     winnerBtn.className = 'view-full-button';
-    winnerBtn.textContent = 'WINNER';
+    winnerBtn.textContent = '⭐ WINNER';
     winnerBtn.addEventListener('click', (e) => {
       e.stopPropagation(); // Prevent triggering modal view
       const result = toggleWinner(sceneId, modelId);

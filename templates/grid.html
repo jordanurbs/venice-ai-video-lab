@@ -26,6 +26,12 @@
             text-align: center;
         }
 
+        .header-buttons {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
         .back-button {
             display: inline-block;
             background: rgba(221, 51, 0, 0.1);
@@ -37,7 +43,6 @@
             font-size: 13px;
             font-weight: 600;
             transition: all 0.3s ease;
-            margin-bottom: 12px;
         }
 
         .back-button:hover {
@@ -61,7 +66,7 @@
             top: 140px;
             left: 0;
             right: 0;
-            bottom: 0;
+            bottom: 50px;
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             grid-template-rows: repeat(3, 1fr);
@@ -149,11 +154,34 @@
             outline-offset: -4px;
             box-shadow: 0 0 20px rgba(221, 51, 0, 0.8);
         }
+
+        /* Footer - Fixed to bottom */
+        .footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(14, 41, 66, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 16px 40px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            z-index: 50;
+            text-align: center;
+        }
+
+        .footer-text {
+            color: var(--venice-canal-mid);
+            font-size: 12px;
+            margin: 0;
+        }
     </style>
 </head>
 <body>
     <div class="header">
-        <a href="../index.html" class="back-button">← Back to Lab</a>
+        <div class="header-buttons">
+            <a href="../index.html" class="back-button">← Back to Lab</a>
+            <a href="master-dashboard.html" class="back-button dashboard-button">📊 Master Dashboard</a>
+        </div>
         <div class="header-content">
             <h1>Scene {{SCENE_NUMBER}}: {{SCENE_TITLE}}</h1>
             <p class="subtitle">{{SCENE_DESCRIPTION}}</p>
