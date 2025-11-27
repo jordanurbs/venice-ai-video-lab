@@ -146,13 +146,34 @@ The setup script will:
 }
 ```
 
+#### JSON Formatting Requirements
+
+**⚠️ IMPORTANT:** Ensure your `config.json` is valid JSON:
+- Remove or convert double quotes `""` inside text values to single quotes `''`
+- Validate JSON syntax before running setup (use [jsonlint.com](https://jsonlint.com) or VS Code)
+- Common issue: Prompts with quotation marks break JSON parsing
+
+**Example - Wrong:**
+```json
+{
+  "description": "A "cinematic" shot of smoke"  // ❌ Breaks JSON
+}
+```
+
+**Example - Correct:**
+```json
+{
+  "description": "A 'cinematic' shot of smoke"  // ✅ Valid JSON
+}
+```
+
 #### Scenes
 ```json
 "scenes": [
   {
     "title": "Scene Name",              // Display name
     "folder": "01-folder-name",         // Folder in videos/
-    "description": "Optional..."        // Scene description
+    "description": "Your generation prompt here..."  // ⚠️ Use your actual AI prompt
   }
 ]
 ```
@@ -161,10 +182,28 @@ The setup script will:
 ```json
 "models": [
   {
-    "id": "kling",                      // Used for filename matching
-    "name": "Kling v2",                 // Display name
-    "speed": "Fast",                    // Speed badge (optional)
-    "color": "#C8E3FD"                  // Model color (optional)
+    "id": "wan-2-5",
+    "name": "Wan 2.5 Preview",
+    "speed": "Fastest",
+    "color": "#C8E3FD"
+  },
+  {
+    "id": "veo-3",
+    "name": "Veo 3 Fast",
+    "speed": "Fast",
+    "color": "#98D8C8"
+  },
+  {
+    "id": "sora-2",
+    "name": "Sora 2",
+    "speed": "Slow",
+    "color": "#FFB366"
+  },
+  {
+    "id": "kling-2",
+    "name": "Kling 2.0",
+    "speed": "Medium",
+    "color": "#F7C8E0"
   }
 ]
 ```
@@ -175,6 +214,66 @@ The setup script will:
 - `"Medium"` - Yellow badge
 - `"Slow"` - Orange badge
 - `"Slowest"` - Red badge
+
+### Complete Example
+
+Here's a full `config.json` showing all fields together:
+
+```json
+{
+  "title": "Venice AI Model Comparison",
+  "description": "Testing prompt consistency across multiple AI video models",
+  "scenes": [
+    {
+      "title": "Cigarette Smoke",
+      "folder": "01-smoke",
+      "description": "Smoke rising from cigarette in dim lighting, cinematic atmosphere"
+    },
+    {
+      "title": "Office Wide Shot",
+      "folder": "02-office",
+      "description": "Wide angle office environment with natural lighting"
+    },
+    {
+      "title": "Walking Camera Follow",
+      "folder": "03-walking",
+      "description": "Camera following subject walking down urban street"
+    }
+  ],
+  "models": [
+    {
+      "id": "wan-2-5",
+      "name": "Wan 2.5 Preview",
+      "speed": "Fastest",
+      "color": "#C8E3FD"
+    },
+    {
+      "id": "veo-3",
+      "name": "Veo 3 Fast",
+      "speed": "Fast",
+      "color": "#98D8C8"
+    },
+    {
+      "id": "sora-2",
+      "name": "Sora 2",
+      "speed": "Slow",
+      "color": "#FFB366"
+    },
+    {
+      "id": "kling-2",
+      "name": "Kling 2.0",
+      "speed": "Medium",
+      "color": "#F7C8E0"
+    }
+  ]
+}
+```
+
+**Key Points:**
+- Scene `description` should be your actual video generation prompt
+- Scene `folder` must match directory name exactly (case-sensitive)
+- Model `name` should match Venice interface output for time parsing
+- Only include models you actually tested
 
 ## Workflow
 

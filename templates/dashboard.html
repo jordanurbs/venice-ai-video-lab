@@ -41,7 +41,7 @@
         .scene-title { font-size: 18px; font-weight: 600; margin-bottom: 8px; }
         .winner-info { display: flex; align-items: center; gap: 8px; font-size: 14px; color: #B0CED1; }
         .winner-badge { background: rgba(221, 51, 0, 0.2); color: #DD3300; padding: 4px 10px; border-radius: 4px; font-size: 12px; font-weight: 600; }
-        .no-winner { color: #777; font-style: italic; }
+        .no-winner { color: #B0CED1; font-style: italic; }
     </style>
 </head>
 <body>
@@ -133,6 +133,10 @@
                 const card = document.createElement('div');
                 card.className = 'scene-card' + (winner ? ' has-winner' : '');
 
+                // Generate grid URL based on scene index
+                const sceneIndex = Object.keys(sceneConfig).indexOf(sceneId);
+                const gridUrl = `grids/scene-${sceneIndex + 1}.html`;
+
                 const videoPath = winner ? getVideoPath(sceneId, winner.winner) : '';
 
                 card.innerHTML = `
@@ -147,12 +151,19 @@
                                 `<span class="winner-badge">✓ Winner</span>
                                  <span>${modelNames[winner.winner] || winner.winner}</span>
                                  ${winner.generationTime ? `<span style="color: #DD3300; font-family: 'Courier New', monospace; font-weight: 600;">${winner.generationTime.toFixed(2)}s</span>` : ''}` :
-                                `<span class="no-winner">No selection</span>`
+                                `<span class="no-winner">Click to compare models</span>`
                             }
                         </div>
                     </div>
                 `;
 
+                // Make empty cards clickable and link to comparison page
+                if (!winner) {
+                    card.style.cursor = 'pointer';
+                    card.onclick = () => window.location.href = gridUrl;
+                }
+
+                // Video hover play (for cards with winners)
                 if (winner && card.querySelector('video')) {
                     const video = card.querySelector('video');
                     video.addEventListener('mouseenter', () => video.play());
