@@ -69,7 +69,7 @@ videos/
 - Copy exact text from Venice interface
 - **Example:** `Wan 2.5 Preview  136.68s`
 - Paste as filename (don't add `.mp4` - it's auto-added)
-- Save to appropriate scene folder in `videos/`
+- Save to appropriate scene folder in `videos/` (create folder or drag and drop files)
 
 **3. What happens automatically:**
 - ✅ `.mp4` extension appended if missing
@@ -204,11 +204,13 @@ videos/
 ## Adding New Videos
 
 ### Step 1: Create scene folder (if new scene)
+Create the folder manually or via command line:
 ```bash
 mkdir videos/04-new-scene
 ```
 
 ### Step 2: Add video files
+Copy files via command line or drag and drop into the folder:
 ```bash
 # Copy your generated videos into the folder
 cp ~/Downloads/kling-output.mp4 videos/04-new-scene/kling.mp4
@@ -309,7 +311,7 @@ videos/
 ### Recommended (Venice Interface)
 
 1. **Generate videos** in Venice AI across multiple models
-2. **Create scene folder** in videos/ (e.g., `01-smoke`)
+2. **Add scene folder** in videos/ (create or drag and drop, e.g., `01-smoke`)
 3. **Download videos** with exact Venice text (e.g., `Wan 2.5 Preview  136.68s`)
 4. **Update config.json** with scene metadata and model names matching Venice
 5. **Run** `npm run setup` (auto-appends `.mp4`, parses times)
@@ -319,7 +321,7 @@ videos/
 ### Alternative (Legacy)
 
 1. **Generate videos** from your AI models
-2. **Create scene folder** in videos/ (e.g., `01-smoke`)
+2. **Add scene folder** in videos/ (create or drag and drop, e.g., `01-smoke`)
 3. **Rename files** to match model IDs (e.g., `kling.mp4`)
 4. **Update config.json** with scene metadata
 5. **Run** `npm run setup`

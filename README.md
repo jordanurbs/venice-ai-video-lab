@@ -27,7 +27,7 @@ cd my-video-comparison
 
 ### 2. Organize Your Videos
 
-Create folders in `videos/` directory, one per scene:
+Add your video files in this structure (create folders manually or drag and drop):
 
 ```
 videos/
@@ -188,7 +188,7 @@ The setup script will:
 - Right-click video → "Save As..."
 - Copy exact text from Venice interface (e.g., `Wan 2.5 Preview  136.68s`)
 - Paste as filename (don't worry about `.mp4` extension - it's auto-added)
-- Save to appropriate scene folder in `videos/`
+- Save to appropriate scene folder in `videos/` (create folder or drag and drop files)
 
 **Example filenames copied from Venice:**
 ```
