@@ -236,25 +236,12 @@ function initializeGrid(sceneId) {
     const videoEl = cell.querySelector('video');
     const videoSrc = videoEl ? videoEl.querySelector('source')?.src : null;
 
-    // Create "View Full" button
-    const viewFullBtn = document.createElement('button');
-    viewFullBtn.className = 'view-full-button';
-    viewFullBtn.textContent = '🔍 View Full';
-    viewFullBtn.addEventListener('click', (e) => {
-      e.stopPropagation(); // Prevent triggering winner selection
-      if (videoSrc) {
-        openModal(videoSrc, MODEL_NAMES[modelId]);
-      }
-    });
-    cell.appendChild(viewFullBtn);
-
-    // Mark current winner
-    if (currentWinner && currentWinner.winner === modelId) {
-      cell.classList.add('winner-selected');
-    }
-
-    // Add click handler
-    cell.addEventListener('click', () => {
+    // Create "WINNER" button
+    const winnerBtn = document.createElement('button');
+    winnerBtn.className = 'view-full-button';
+    winnerBtn.textContent = 'WINNER';
+    winnerBtn.addEventListener('click', (e) => {
+      e.stopPropagation(); // Prevent triggering modal view
       const result = toggleWinner(sceneId, modelId);
 
       // Update UI
@@ -263,8 +250,21 @@ function initializeGrid(sceneId) {
         cell.classList.add('winner-selected');
       }
     });
+    cell.appendChild(winnerBtn);
 
-    // Add hover overlay for selection
+    // Mark current winner
+    if (currentWinner && currentWinner.winner === modelId) {
+      cell.classList.add('winner-selected');
+    }
+
+    // Add click handler for modal view
+    cell.addEventListener('click', () => {
+      if (videoSrc) {
+        openModal(videoSrc, MODEL_NAMES[modelId]);
+      }
+    });
+
+    // Add hover overlay for modal view
     const overlay = document.createElement('div');
     overlay.className = 'rating-overlay';
     overlay.innerHTML = `
@@ -273,7 +273,7 @@ function initializeGrid(sceneId) {
           <circle cx="24" cy="24" r="20" stroke="#DD3300" stroke-width="3" fill="rgba(221, 51, 0, 0.2)"/>
           <path d="M14 24L20 30L34 16" stroke="#DD3300" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
-        <div class="rating-text">Click to Select Winner</div>
+        <div class="rating-text">view full</div>
       </div>
     `;
     cell.appendChild(overlay);
