@@ -77,14 +77,176 @@ function toggleWinner(sceneId, modelId) {
 }
 
 /**
+ * Create and inject modal HTML and CSS for full-screen video viewing
+ */
+function injectModal() {
+  // Only inject once
+  if (document.getElementById('video-modal')) return;
+
+  // Inject modal CSS
+  const style = document.createElement('style');
+  style.textContent = `
+    .video-modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.95);
+      z-index: 10000;
+      align-items: center;
+      justify-content: center;
+    }
+    .video-modal.active {
+      display: flex;
+    }
+    .video-modal-content {
+      position: relative;
+      width: 90vw;
+      height: 90vh;
+      max-width: 1920px;
+      max-height: 1080px;
+    }
+    .video-modal-video {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+    .video-modal-close {
+      position: absolute;
+      top: -50px;
+      right: 0;
+      background: rgba(221, 51, 0, 0.2);
+      border: 1px solid #DD3300;
+      color: #DD3300;
+      padding: 12px 24px;
+      border-radius: 6px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .video-modal-close:hover {
+      background: #DD3300;
+      color: #FFFFFF;
+    }
+    .video-modal-info {
+      position: absolute;
+      top: -50px;
+      left: 0;
+      color: #B0CED1;
+      font-size: 14px;
+      font-weight: 600;
+    }
+    .view-full-button {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      background: rgba(0, 0, 0, 0.9);
+      color: #C8E3FD;
+      padding: 8px 12px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      z-index: 16;
+      cursor: pointer;
+      border: 1px solid rgba(200, 227, 253, 0.3);
+      transition: all 0.3s ease;
+      opacity: 0;
+      pointer-events: none;
+    }
+    .video-cell:hover .view-full-button {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .view-full-button:hover {
+      background: rgba(200, 227, 253, 0.2);
+      border-color: #C8E3FD;
+    }
+  `;
+  document.head.appendChild(style);
+
+  // Inject modal HTML
+  const modal = document.createElement('div');
+  modal.id = 'video-modal';
+  modal.className = 'video-modal';
+  modal.innerHTML = `
+    <div class="video-modal-content">
+      <div class="video-modal-info"></div>
+      <button class="video-modal-close">Close (ESC)</button>
+      <video class="video-modal-video" controls loop></video>
+    </div>
+  `;
+  document.body.appendChild(modal);
+
+  // Add event listeners
+  const closeBtn = modal.querySelector('.video-modal-close');
+  const video = modal.querySelector('.video-modal-video');
+
+  closeBtn.addEventListener('click', closeModal);
+  modal.addEventListener('click', (e) => {
+    if (e.target === modal) closeModal();
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && modal.classList.contains('active')) {
+      closeModal();
+    }
+  });
+}
+
+/**
+ * Open modal with specific video
+ */
+function openModal(videoSrc, modelName) {
+  const modal = document.getElementById('video-modal');
+  const video = modal.querySelector('.video-modal-video');
+  const info = modal.querySelector('.video-modal-info');
+
+  video.src = videoSrc;
+  info.textContent = modelName;
+  modal.classList.add('active');
+  video.play();
+}
+
+/**
+ * Close modal and stop video playback
+ */
+function closeModal() {
+  const modal = document.getElementById('video-modal');
+  const video = modal.querySelector('.video-modal-video');
+
+  modal.classList.remove('active');
+  video.pause();
+  video.src = '';
+}
+
+/**
  * Initialize grid page with winner selection
  */
 function initializeGrid(sceneId) {
   const videoCells = document.querySelectorAll('.video-cell');
   const currentWinner = getWinner(sceneId);
 
+  // Inject modal on first initialization
+  injectModal();
+
   videoCells.forEach(cell => {
     const modelId = cell.dataset.model;
+    const videoEl = cell.querySelector('video');
+    const videoSrc = videoEl ? videoEl.querySelector('source')?.src : null;
+
+    // Create "View Full" button
+    const viewFullBtn = document.createElement('button');
+    viewFullBtn.className = 'view-full-button';
+    viewFullBtn.textContent = '🔍 View Full';
+    viewFullBtn.addEventListener('click', (e) => {
+      e.stopPropagation(); // Prevent triggering winner selection
+      if (videoSrc) {
+        openModal(videoSrc, MODEL_NAMES[modelId]);
+      }
+    });
+    cell.appendChild(viewFullBtn);
 
     // Mark current winner
     if (currentWinner && currentWinner.winner === modelId) {
@@ -175,3 +337,6 @@ window.initializeGrid = initializeGrid;
 window.getVideoPath = getVideoPath;
 window.exportSelections = exportSelections;
 window.clearAllSelections = clearAllSelections;
+window.injectModal = injectModal;
+window.openModal = openModal;
+window.closeModal = closeModal;
