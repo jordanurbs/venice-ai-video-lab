@@ -16,6 +16,13 @@ Compare AI video generation models side-by-side with a beautiful, Venice-branded
 - ✅ **Offline Ready** - Works from local filesystem (`file://` protocol)
 - ✅ **Venice Branding** - Fixed Sea Dark (#0E2942) and Venetian Red (#DD3300) colors
 
+## Prerequisites
+
+**Required:** Node.js 14.0.0 or higher (for running the setup script)
+
+- Download from [nodejs.org](https://nodejs.org)
+- Verify installation: `node --version`
+
 ## Quick Start (5 Minutes)
 
 ### 1. Clone This Template
@@ -110,6 +117,8 @@ your-project/
 ### Video File Naming
 
 **Recommended (Venice Interface):** Copy exact text from Venice interface when saving generated videos:
+
+![File Naming Convention](filenaming-convention.png)
 
 ```
 Wan 2.5 Preview  136.68s

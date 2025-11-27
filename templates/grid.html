@@ -20,34 +20,24 @@
             right: 0;
             background: rgba(14, 41, 66, 0.95);
             backdrop-filter: blur(10px);
-            padding: 20px 40px;
+            padding: 16px 40px 20px 40px;
             z-index: 100;
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .header-left h1 {
-            font-size: 24px;
-            margin-bottom: 4px;
-        }
-
-        .header-left .subtitle {
-            font-size: 14px;
-            color: #B0CED1;
+            text-align: center;
         }
 
         .back-button {
+            display: inline-block;
             background: rgba(221, 51, 0, 0.1);
             border: 1px solid #DD3300;
             color: #DD3300;
-            padding: 10px 20px;
+            padding: 8px 16px;
             border-radius: 8px;
             text-decoration: none;
-            font-size: 14px;
+            font-size: 13px;
             font-weight: 600;
             transition: all 0.3s ease;
+            margin-bottom: 12px;
         }
 
         .back-button:hover {
@@ -55,17 +45,27 @@
             color: #FFFFFF;
         }
 
+        .header-content h1 {
+            font-size: 24px;
+            margin-bottom: 4px;
+        }
+
+        .header-content .subtitle {
+            font-size: 14px;
+            color: #B0CED1;
+        }
+
         /* Video Grid */
         .video-container {
             position: fixed;
-            top: 80px;
+            top: 120px;
             left: 0;
             right: 0;
             bottom: 0;
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             grid-template-rows: repeat(3, 1fr);
-            gap: 4px;
+            gap: 8px;
             background: #000000;
         }
 
@@ -84,8 +84,9 @@
         video {
             width: 100%;
             height: 100%;
-            object-fit: cover;
+            object-fit: contain;
             display: block;
+            background: #000000;
         }
 
         video::-webkit-media-controls {
@@ -98,7 +99,7 @@
             bottom: 12px;
             left: 12px;
             background: rgba(0, 0, 0, 0.9);
-            color: #FFFFFF;
+            color: #0E2942;
             padding: 8px 16px;
             border-radius: 6px;
             font-size: 14px;
@@ -152,11 +153,11 @@
 </head>
 <body>
     <div class="header">
-        <div class="header-left">
+        <a href="../index.html" class="back-button">← Back to Lab</a>
+        <div class="header-content">
             <h1>Scene {{SCENE_NUMBER}}: {{SCENE_TITLE}}</h1>
             <p class="subtitle">{{SCENE_DESCRIPTION}}</p>
         </div>
-        <a href="../index.html" class="back-button">← Back to Lab</a>
     </div>
 
     <div class="video-container">
