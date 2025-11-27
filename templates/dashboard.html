@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Winner Selection Dashboard | {{PROJECT_TITLE}}</title>
+    <link rel="stylesheet" href="../styles.css">
+    <style>
+        body { background: #000000; }
+
+        /* Header */
+        .header { position: sticky; top: 0; left: 0; right: 0; background: rgba(14, 41, 66, 0.95); backdrop-filter: blur(10px); padding: 20px 40px; z-index: 100; border-bottom: 1px solid rgba(255, 255, 255, 0.1); }
+        .header-content { max-width: 1600px; margin: 0 auto; }
+        .header-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+        .header-top h1 { font-size: 28px; }
+        .header-actions { display: flex; gap: 12px; }
+        .btn { background: rgba(221, 51, 0, 0.1); border: 1px solid #DD3300; color: #DD3300; padding: 10px 20px; border-radius: 8px; text-decoration: none; font-size: 14px; font-weight: 600; transition: all 0.3s ease; cursor: pointer; }
+        .btn:hover { background: #DD3300; color: #FFFFFF; }
+        .btn-secondary { background: rgba(176, 206, 209, 0.1); border-color: #B0CED1; color: #B0CED1; }
+        .btn-secondary:hover { background: #B0CED1; color: #0E2942; }
+        .btn:disabled { opacity: 0.3; cursor: not-allowed; }
+        .progress-bar { height: 8px; background: rgba(255, 255, 255, 0.1); border-radius: 4px; overflow: hidden; }
+        .progress-fill { height: 100%; background: linear-gradient(90deg, #DD3300, #C8E3FD); transition: width 0.3s ease; }
+        .progress-text { font-size: 14px; color: #B0CED1; margin-top: 8px; }
+
+        /* Film Strip Container */
+        .film-strip-container { padding: 40px 0; background: linear-gradient(180deg, #0A1F2E 0%, #000000 100%); }
+        .film-strip { display: flex; gap: 24px; padding: 0 40px; overflow-x: auto; scroll-behavior: smooth; }
+        .film-strip::-webkit-scrollbar { height: 12px; }
+        .film-strip::-webkit-scrollbar-track { background: #0E2942; border-radius: 6px; }
+        .film-strip::-webkit-scrollbar-thumb { background: #DD3300; border-radius: 6px; }
+
+        /* Scene Card */
+        .scene-card { flex: 0 0 400px; background: rgba(14, 41, 66, 0.6); border: 2px solid transparent; border-radius: 12px; overflow: hidden; transition: all 0.3s ease; cursor: pointer; }
+        .scene-card:hover { border-color: #DD3300; transform: translateY(-4px); box-shadow: 0 8px 24px rgba(221, 51, 0, 0.3); }
+        .scene-card.has-winner { border-color: #B0CED1; }
+        .scene-number { position: absolute; top: 12px; left: 12px; background: rgba(0, 0, 0, 0.9); color: #C8E3FD; padding: 6px 12px; border-radius: 6px; font-size: 14px; font-weight: 700; z-index: 10; }
+        .video-wrapper { position: relative; aspect-ratio: 16 / 9; background: #000000; }
+        .video-wrapper video { width: 100%; height: 100%; object-fit: cover; }
+        .scene-info { padding: 16px; }
+        .scene-title { font-size: 18px; font-weight: 600; margin-bottom: 8px; }
+        .winner-info { display: flex; align-items: center; gap: 8px; font-size: 14px; color: #B0CED1; }
+        .winner-badge { background: rgba(221, 51, 0, 0.2); color: #DD3300; padding: 4px 10px; border-radius: 4px; font-size: 12px; font-weight: 600; }
+        .no-winner { color: #777; font-style: italic; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-content">
+            <div class="header-top">
+                <div>
+                    <h1>Winner Selection Dashboard</h1>
+                    <p style="color: #B0CED1; font-size: 14px; margin-top: 4px;">{{PROJECT_TITLE}}</p>
+                </div>
+                <div class="header-actions">
+                    <button class="btn" id="export-btn" onclick="exportSelections()">📥 Export Selections</button>
+                    <button class="btn btn-secondary" onclick="clearAllSelections()">🗑️ Clear All</button>
+                    <a href="../index.html" class="btn btn-secondary" style="display: inline-block;">← Back to Lab</a>
+                </div>
+            </div>
+            <div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progress-fill" style="width: 0%"></div>
+                </div>
+                <p class="progress-text" id="progress-text">0/{{SCENE_COUNT}} scenes selected</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="film-strip-container">
+        <div class="film-strip" id="film-strip">
+            <!-- Scene cards will be dynamically generated -->
+        </div>
+    </div>
+
+    <script src="rating-system.js"></script>
+    <script>
+        // Dashboard initialization
+        const SCENE_COUNT = {{SCENE_COUNT}};
+
+        function updateProgress() {
+            const winners = getWinners();
+            const count = Object.keys(winners).length;
+            const percentage = (count / SCENE_COUNT) * 100;
+
+            document.getElementById('progress-fill').style.width = percentage + '%';
+            document.getElementById('progress-text').textContent = `${count}/${SCENE_COUNT} scenes selected`;
+        }
+
+        function getWinners() {
+            const data = localStorage.getItem('venice-ai-winners');
+            return data ? JSON.parse(data) : {};
+        }
+
+        function exportSelections() {
+            const winners = getWinners();
+            const exportData = {
+                project: '{{PROJECT_TITLE}}',
+                exportDate: new Date().toISOString(),
+                selections: winners
+            };
+
+            const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'venice-ai-winners.json';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        function clearAllSelections() {
+            if (confirm('Clear all winner selections?')) {
+                localStorage.removeItem('venice-ai-winners');
+                location.reload();
+            }
+        }
+
+        function renderDashboard() {
+            const filmStrip = document.getElementById('film-strip');
+            const winners = getWinners();
+            const sceneConfig = window.SCENE_CONFIG || {};
+            const modelNames = window.MODEL_NAMES || {};
+
+            filmStrip.innerHTML = '';
+
+            Object.keys(sceneConfig).forEach(sceneId => {
+                const scene = sceneConfig[sceneId];
+                const winner = winners[sceneId];
+
+                const card = document.createElement('div');
+                card.className = 'scene-card' + (winner ? ' has-winner' : '');
+
+                const videoPath = winner ? getVideoPath(sceneId, winner.winner) : '';
+
+                card.innerHTML = `
+                    <div class="video-wrapper">
+                        <div class="scene-number">${scene.sceneNumber}</div>
+                        ${winner ? `<video src="${videoPath}" loop muted playsinline></video>` : ''}
+                    </div>
+                    <div class="scene-info">
+                        <div class="scene-title">${scene.title}</div>
+                        <div class="winner-info">
+                            ${winner ?
+                                `<span class="winner-badge">✓ Winner</span>
+                                 <span>${modelNames[winner.winner] || winner.winner}</span>
+                                 ${winner.generationTime ? `<span style="color: #DD3300; font-family: 'Courier New', monospace; font-weight: 600;">${winner.generationTime.toFixed(2)}s</span>` : ''}` :
+                                `<span class="no-winner">No selection</span>`
+                            }
+                        </div>
+                    </div>
+                `;
+
+                if (winner && card.querySelector('video')) {
+                    const video = card.querySelector('video');
+                    video.addEventListener('mouseenter', () => video.play());
+                    video.addEventListener('mouseleave', () => video.pause());
+                }
+
+                filmStrip.appendChild(card);
+            });
+
+            updateProgress();
+        }
+
+        function getVideoPath(sceneId, modelId) {
+            const mapping = window.VIDEO_FILE_MAPPING || {};
+            const sceneConfig = window.SCENE_CONFIG || {};
+            if (mapping[sceneId] && mapping[sceneId][modelId]) {
+                const folder = sceneConfig[sceneId].folder;
+                const videoInfo = mapping[sceneId][modelId];
+                const filename = videoInfo.filename || videoInfo; // Backward compatibility
+                return `../../videos/${folder}/${filename}`;
+            }
+            return '';
+        }
+
+        // Initialize dashboard
+        document.addEventListener('DOMContentLoaded', () => {
+            renderDashboard();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Speed Test Results | {{PROJECT_TITLE}}</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Speed Test Page Styles */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px;
+        }
+
+        .speed-stats {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 40px;
+            margin-top: 40px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 32px;
+            margin-bottom: 40px;
+        }
+
+        .stat-card {
+            text-align: center;
+            padding: 24px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+        }
+
+        .stat-card .label {
+            font-size: 14px;
+            color: var(--venice-canal-mid);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 12px;
+        }
+
+        .stat-card .value {
+            font-size: 36px;
+            font-weight: 600;
+            color: var(--venice-red);
+        }
+
+        .stat-card .model-name {
+            font-size: 16px;
+            color: #FFFFFF;
+            margin-top: 8px;
+        }
+
+        /* Model Comparison Table */
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 40px;
+        }
+
+        .comparison-table thead {
+            background: rgba(0, 0, 0, 0.5);
+        }
+
+        .comparison-table th {
+            padding: 16px;
+            text-align: left;
+            font-size: 14px;
+            color: var(--venice-canal-light);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            border-bottom: 2px solid var(--venice-red);
+        }
+
+        .comparison-table td {
+            padding: 20px 16px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .comparison-table tbody tr:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .model-rank {
+            display: inline-block;
+            width: 32px;
+            height: 32px;
+            background: rgba(221, 51, 0, 0.2);
+            border: 1px solid var(--venice-red);
+            border-radius: 50%;
+            text-align: center;
+            line-height: 32px;
+            font-weight: 600;
+            color: var(--venice-red);
+        }
+
+        .model-rank.fastest {
+            background: rgba(91, 246, 112, 0.2);
+            border-color: #5BF670;
+            color: #5BF670;
+        }
+
+        .model-rank.slowest {
+            background: rgba(221, 51, 0, 0.3);
+            border-color: #DD3300;
+            color: #DD3300;
+        }
+
+        .model-name-cell {
+            font-size: 18px;
+            font-weight: 600;
+            color: #FFFFFF;
+        }
+
+        .time-value {
+            font-size: 24px;
+            font-weight: 600;
+            font-family: 'Courier New', monospace;
+        }
+
+        .time-value.fast {
+            color: #5BF670;
+        }
+
+        .time-value.medium {
+            color: var(--venice-canal-light);
+        }
+
+        .time-value.slow {
+            color: var(--venice-red);
+        }
+
+        .completion-bar {
+            width: 100%;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-top: 8px;
+        }
+
+        .completion-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--venice-red), var(--venice-canal-light));
+            transition: width 0.5s ease;
+        }
+
+        .scene-count {
+            font-size: 14px;
+            color: var(--venice-canal-mid);
+            margin-top: 4px;
+        }
+
+        /* No data state */
+        .no-data {
+            text-align: center;
+            padding: 60px 40px;
+            color: var(--venice-canal-mid);
+        }
+
+        .no-data svg {
+            width: 64px;
+            height: 64px;
+            margin-bottom: 20px;
+            opacity: 0.5;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .comparison-table {
+                font-size: 14px;
+            }
+
+            .comparison-table th,
+            .comparison-table td {
+                padding: 12px 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>⚡ Speed Test Results</h1>
+        <p class="subtitle">{{PROJECT_TITLE}} - Generation Time Comparison</p>
+        <div class="stats-bar">
+            <div class="stat">
+                <span class="stat-number" id="total-tests">0</span>
+                <span class="stat-label">Total Tests</span>
+            </div>
+            <div class="stat">
+                <span class="stat-number" id="models-tested">0</span>
+                <span class="stat-label">Models Tested</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="nav-pills">
+            <a href="index.html" class="nav-pill">← Back to Lab</a>
+            <a href="grids/master-dashboard.html" class="nav-pill">View Dashboard</a>
+        </div>
+
+        <div class="speed-stats">
+            <div class="stats-grid" id="top-stats">
+                <!-- Populated by JavaScript -->
+            </div>
+
+            <h2 style="margin-bottom: 20px; font-size: 28px;">Model Speed Rankings</h2>
+
+            <div id="table-container">
+                <!-- Populated by JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p class="footer-text">Built with <span class="venice-brand">Venice AI</span> | Private & Uncensored Machine Intelligence</p>
+    </div>
+
+    <script>
+        // Model statistics injected from setup.js
+        const MODEL_STATS = {{MODEL_STATS}};
+        const MODEL_NAMES = {{MODEL_NAMES}};
+        const TOTAL_SCENES = {{SCENE_COUNT}};
+
+        document.addEventListener('DOMContentLoaded', () => {
+            renderSpeedTest();
+        });
+
+        function renderSpeedTest() {
+            // Convert MODEL_STATS object to array and sort by avgTime
+            const modelsArray = Object.entries(MODEL_STATS)
+                .map(([id, stats]) => ({
+                    id,
+                    ...stats
+                }))
+                .filter(model => model.avgTime !== null)
+                .sort((a, b) => a.avgTime - b.avgTime);
+
+            if (modelsArray.length === 0) {
+                document.getElementById('table-container').innerHTML = `
+                    <div class="no-data">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                        </svg>
+                        <h3>No Generation Time Data Available</h3>
+                        <p>Add videos with generation times in their filenames (e.g., "Model Name 123.45s.mp4")</p>
+                    </div>
+                `;
+                return;
+            }
+
+            // Update header stats
+            const totalTests = modelsArray.reduce((sum, m) => sum + m.scenesCompleted, 0);
+            document.getElementById('total-tests').textContent = totalTests;
+            document.getElementById('models-tested').textContent = modelsArray.length;
+
+            // Render top stats (fastest, slowest, median)
+            const fastest = modelsArray[0];
+            const slowest = modelsArray[modelsArray.length - 1];
+            const median = modelsArray[Math.floor(modelsArray.length / 2)];
+
+            document.getElementById('top-stats').innerHTML = `
+                <div class="stat-card">
+                    <div class="label">🏆 Fastest Model</div>
+                    <div class="value">${fastest.avgTime.toFixed(2)}s</div>
+                    <div class="model-name">${fastest.name}</div>
+                </div>
+                <div class="stat-card">
+                    <div class="label">📊 Median Time</div>
+                    <div class="value">${median.avgTime.toFixed(2)}s</div>
+                    <div class="model-name">${median.name}</div>
+                </div>
+                <div class="stat-card">
+                    <div class="label">🐌 Slowest Model</div>
+                    <div class="value">${slowest.avgTime.toFixed(2)}s</div>
+                    <div class="model-name">${slowest.name}</div>
+                </div>
+            `;
+
+            // Render comparison table
+            const tableRows = modelsArray.map((model, index) => {
+                const rank = index + 1;
+                const isFirst = rank === 1;
+                const isLast = rank === modelsArray.length;
+                const rankClass = isFirst ? 'fastest' : (isLast ? 'slowest' : '');
+
+                // Determine speed class for color coding
+                let speedClass = 'medium';
+                if (model.avgTime < fastest.avgTime * 1.5) {
+                    speedClass = 'fast';
+                } else if (model.avgTime > slowest.avgTime * 0.7) {
+                    speedClass = 'slow';
+                }
+
+                const completionPercent = (model.scenesCompleted / TOTAL_SCENES) * 100;
+
+                return `
+                    <tr>
+                        <td>
+                            <span class="model-rank ${rankClass}">${rank}</span>
+                        </td>
+                        <td class="model-name-cell">${model.name}</td>
+                        <td>
+                            <div class="time-value ${speedClass}">${model.avgTime.toFixed(2)}s</div>
+                            <div class="scene-count">${model.scenesCompleted} of ${TOTAL_SCENES} scenes</div>
+                            <div class="completion-bar">
+                                <div class="completion-fill" style="width: ${completionPercent}%"></div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="time-value ${speedClass === 'fast' ? 'fast' : 'medium'}">${model.minTime.toFixed(2)}s</div>
+                        </td>
+                        <td>
+                            <div class="time-value ${speedClass === 'slow' ? 'slow' : 'medium'}">${model.maxTime.toFixed(2)}s</div>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+
+            document.getElementById('table-container').innerHTML = `
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Rank</th>
+                            <th>Model</th>
+                            <th>Avg Time</th>
+                            <th>Fastest</th>
+                            <th>Slowest</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${tableRows}
+                    </tbody>
+                </table>
+            `;
+        }
+    </script>
+</body>
+</html>

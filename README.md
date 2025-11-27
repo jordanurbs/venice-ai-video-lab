@@ -9,7 +9,9 @@ Compare AI video generation models side-by-side with a beautiful, Venice-branded
 - ✅ **3x3 Video Grid** - Compare up to 9 models simultaneously
 - ✅ **Winner Selection** - Click to select best outputs per scene
 - ✅ **Master Dashboard** - View all selections at once
-- ✅ **Export Results** - Download selections as JSON
+- ✅ **Generation Time Tracking** - Automatically parses and displays generation times from Venice filenames
+- ✅ **Speed Test Page** - Compare model performance with rankings and statistics
+- ✅ **Export Results** - Download selections as JSON with generation times
 - ✅ **Zero Dependencies** - Pure HTML/CSS/JS, no build tools required
 - ✅ **Offline Ready** - Works from local filesystem (`file://` protocol)
 - ✅ **Venice Branding** - Fixed Sea Dark (#0E2942) and Venetian Red (#DD3300) colors
@@ -19,7 +21,7 @@ Compare AI video generation models side-by-side with a beautiful, Venice-branded
 ### 1. Clone This Template
 
 ```bash
-git clone <your-repo-url> my-video-comparison
+git clone https://github.com/jordanurbs/venice-ai-video-lab.git my-video-comparison
 cd my-video-comparison
 ```
 
@@ -107,9 +109,30 @@ your-project/
 
 ### Video File Naming
 
+**Recommended (Venice Interface):** Copy exact text from Venice interface when saving generated videos:
+
+```
+Wan 2.5 Preview  136.68s
+Veo 3 Fast  62.80s
+Sora 2  209.85s
+```
+
+The setup script will:
+- ✅ **Auto-append `.mp4`** if extension is missing (Venice often omits it)
+- ✅ **Parse generation time** from filename (e.g., `136.68s` → 136.68 seconds)
+- ✅ **Display times** in grid badges, dashboard, and speed test page
+
+**Alternative (Legacy):** Simple model ID format still works:
+
 - **Format:** `{modelId}.mp4` (must match model `id` in config)
 - **Extensions:** `.mp4` or `.mov`
 - **Examples:** If config has `"id": "kling"`, file should be `kling.mp4`
+
+**How it works:**
+- Filenames like `Wan 2.5 Preview  192.79s` are matched to models via fuzzy matching
+- Model name "Wan 2.5 Preview" matches config `"name": "Wan 2.5 Preview"`
+- Generation time `192.79s` is automatically extracted and stored
+- Missing `.mp4` extension is added automatically during scanning
 
 ## Configuration Reference
 
@@ -155,24 +178,87 @@ your-project/
 
 ## Workflow
 
-### 1. Add Videos
-Drop your `.mp4` files into scene folders in `videos/`
+### Recommended: Venice Interface Workflow
 
-### 2. Update Config
-Edit `config.json` to match your scenes and models
+**1. Generate videos in Venice AI**
+- Test your prompt across multiple models
+- Venice shows generation time for each model
 
-### 3. Build Site
+**2. Download and save with exact Venice text**
+- Right-click video → "Save As..."
+- Copy exact text from Venice interface (e.g., `Wan 2.5 Preview  136.68s`)
+- Paste as filename (don't worry about `.mp4` extension - it's auto-added)
+- Save to appropriate scene folder in `videos/`
+
+**Example filenames copied from Venice:**
+```
+videos/01-smoke/
+├── Wan 2.5 Preview  136.68s
+├── Veo 3 Fast  62.80s
+├── Sora 2  209.85s
+└── Kling 2.0  98.45s
+```
+
+**3. Update Config**
+Edit `config.json` to match your scenes and models:
+```json
+{
+  "models": [
+    {
+      "id": "wan-2-5",
+      "name": "Wan 2.5 Preview",  // Matches filename
+      "speed": "Fastest"
+    },
+    {
+      "id": "veo-3",
+      "name": "Veo 3 Fast",        // Matches filename
+      "speed": "Fast"
+    }
+  ]
+}
+```
+
+**4. Build Site**
 ```bash
 npm run setup
 ```
 
-### 4. Review
+The setup script will:
+- Find videos via fuzzy matching (handles full model names)
+- Auto-append `.mp4` extension if missing
+- Parse generation times from filenames
+- Display times throughout the interface
+
+**5. Review & Compare**
+- Open `site/index.html` - Grid comparisons with generation time badges
+- Open `site/speed-test.html` - Model performance rankings
+
+**6. Select Winners**
+Click on videos to mark favorites (stores model + generation time)
+
+**7. Export**
+Click "Export Selections" to save as JSON with generation times
+
+### Alternative: Simple Workflow
+
+**1. Add Videos**
+Drop your `.mp4` files into scene folders in `videos/`
+
+**2. Update Config**
+Edit `config.json` to match your scenes and models
+
+**3. Build Site**
+```bash
+npm run setup
+```
+
+**4. Review**
 Open `site/index.html` and compare models
 
-### 5. Select Winners
+**5. Select Winners**
 Click on videos to mark favorites
 
-### 6. Export
+**6. Export**
 Click "Export Selections" button to save as JSON
 
 ## Troubleshooting
@@ -227,11 +313,22 @@ When you click "Export Selections", you get:
       "winner": "kling",
       "timestamp": "2025-11-26T12:30:00.000Z",
       "sceneName": "Cigarette Smoke",
-      "modelName": "Kling v2"
+      "modelName": "Kling v2",
+      "generationTime": 98.45
+    },
+    "scene-2": {
+      "winner": "veo-3",
+      "timestamp": "2025-11-26T12:31:15.000Z",
+      "sceneName": "Office Wide Shot",
+      "modelName": "Veo 3 Fast",
+      "generationTime": 62.80
     }
   }
 }
 ```
+
+**New Field:**
+- `generationTime` - Seconds to generate (parsed from Venice filename), or `null` if not available
 
 ## Requirements
 

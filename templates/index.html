@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{PROJECT_TITLE}} | {{MODEL_COUNT}} Models × {{SCENE_COUNT}} Scenes</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="header">
+        <h1>{{PROJECT_TITLE}}</h1>
+        <p class="subtitle">AI Video Model Comparison</p>
+
+        <div class="stats-bar">
+            <div class="stat">
+                <span class="stat-number">{{TOTAL_VIDEOS}}</span>
+                <span class="stat-label">Videos Tested</span>
+            </div>
+            <div class="stat">
+                <span class="stat-number">{{MODEL_COUNT}}</span>
+                <span class="stat-label">AI Models</span>
+            </div>
+            <div class="stat">
+                <span class="stat-number">{{SCENE_COUNT}}</span>
+                <span class="stat-label">Scenes</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="nav-pills">
+        <a href="grids/master-dashboard.html" class="nav-pill">📊 Master Dashboard</a>
+    </div>
+
+    <div class="container">
+        <div class="scene-grid">
+{{SCENE_CARDS}}
+        </div>
+    </div>
+
+    <div class="footer">
+        <p class="footer-text">
+            Testing conducted on <span class="venice-brand">Venice AI</span> platform<br>
+            Side-by-side comparison of {{MODEL_COUNT}} AI video generation models
+        </p>
+    </div>
+</body>
+</html>

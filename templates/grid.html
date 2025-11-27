@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scene {{SCENE_NUMBER}}: {{SCENE_TITLE}} | Model Comparison</title>
+    <link rel="stylesheet" href="../styles.css">
+    <style>
+        /* Grid-specific overrides */
+        body {
+            background: #000000;
+            overflow: hidden;
+        }
+
+        /* Header */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(14, 41, 66, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 20px 40px;
+            z-index: 100;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-left h1 {
+            font-size: 24px;
+            margin-bottom: 4px;
+        }
+
+        .header-left .subtitle {
+            font-size: 14px;
+            color: #B0CED1;
+        }
+
+        .back-button {
+            background: rgba(221, 51, 0, 0.1);
+            border: 1px solid #DD3300;
+            color: #DD3300;
+            padding: 10px 20px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .back-button:hover {
+            background: #DD3300;
+            color: #FFFFFF;
+        }
+
+        /* Video Grid */
+        .video-container {
+            position: fixed;
+            top: 80px;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: repeat(3, 1fr);
+            gap: 4px;
+            background: #000000;
+        }
+
+        .video-cell {
+            position: relative;
+            overflow: hidden;
+            background: #000000;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+
+        .video-cell:hover {
+            transform: scale(1.02);
+        }
+
+        video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        video::-webkit-media-controls {
+            display: none !important;
+        }
+
+        /* Model Label */
+        .model-label {
+            position: absolute;
+            bottom: 12px;
+            left: 12px;
+            background: rgba(0, 0, 0, 0.9);
+            color: #FFFFFF;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            z-index: 10;
+            letter-spacing: 0.05em;
+        }
+
+        /* Speed badge */
+        .speed-badge {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: rgba(0, 0, 0, 0.9);
+            color: #C8E3FD;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 600;
+            z-index: 10;
+        }
+
+        .speed-badge.fastest { color: #5BF670; }
+        .speed-badge.fast { color: #C8E3FD; }
+        .speed-badge.medium { color: #FFE8CC; }
+        .speed-badge.slow { color: #FFB380; }
+        .speed-badge.slowest { color: #DD3300; }
+
+        /* Generation time badge */
+        .gen-time-badge {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            background: rgba(221, 51, 0, 0.9);
+            color: #FFFFFF;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 600;
+            z-index: 10;
+            font-family: 'Courier New', monospace;
+        }
+
+        /* Winner selection styles */
+        .video-cell.winner-selected {
+            outline: 4px solid #DD3300;
+            outline-offset: -4px;
+            box-shadow: 0 0 20px rgba(221, 51, 0, 0.8);
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-left">
+            <h1>Scene {{SCENE_NUMBER}}: {{SCENE_TITLE}}</h1>
+            <p class="subtitle">{{SCENE_DESCRIPTION}}</p>
+        </div>
+        <a href="../index.html" class="back-button">← Back to Lab</a>
+    </div>
+
+    <div class="video-container">
+{{VIDEO_GRID}}
+    </div>
+
+    <script src="rating-system.js"></script>
+    <script>
+        // Initialize grid for this scene
+        document.addEventListener('DOMContentLoaded', () => {
+            if (typeof initializeGrid === 'function') {
+                initializeGrid('{{SCENE_ID}}');
+            }
+
+            // Auto-play all videos when loaded
+            const videos = document.querySelectorAll('video');
+            videos.forEach(video => {
+                video.addEventListener('loadeddata', () => {
+                    video.play().catch(err => console.log('Autoplay prevented:', err));
+                });
+            });
+        });
+    </script>
+</body>
+</html>

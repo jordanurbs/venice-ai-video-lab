@@ -1,0 +1,54 @@
+# Venice AI Video Testing Lab - .gitignore
+
+# Generated site output
+site/
+
+# Video files (usually too large for git - use git-lfs if needed)
+*.mp4
+*.mov
+*.avi
+*.webm
+*.mkv
+
+# But keep the videos/ directory structure and README
+!videos/
+!videos/README.md
+
+# Node modules (if dependencies are added later)
+node_modules/
+
+# User-specific config (optional - uncomment if you want to keep config.json private)
+# config.json
+
+# OS-specific files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.project
+.settings/
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+
+# Temporary files
+*.tmp
+*.temp
+.cache/
+
+# Build artifacts
+dist/
+build/

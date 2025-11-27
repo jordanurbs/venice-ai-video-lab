@@ -1,0 +1,30 @@
+{
+  "name": "venice-ai-video-testing-lab",
+  "version": "1.0.0",
+  "description": "Compare AI video models side-by-side with Venice branding",
+  "main": "setup.js",
+  "scripts": {
+    "setup": "node setup.js",
+    "validate": "node setup.js --validate-only"
+  },
+  "keywords": [
+    "venice",
+    "ai",
+    "video",
+    "comparison",
+    "testing"
+  ],
+  "author": "",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jordanurbs/venice-ai-video-lab.git"
+  },
+  "bugs": {
+    "url": "https://github.com/jordanurbs/venice-ai-video-lab/issues"
+  },
+  "homepage": "https://github.com/jordanurbs/venice-ai-video-lab#readme",
+  "engines": {
+    "node": ">=14.0.0"
+  }
+}
