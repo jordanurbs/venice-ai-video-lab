@@ -103,13 +103,11 @@ Your `config.json` should use full model names to match Venice filenames:
   "models": [
     {
       "id": "wan-2-5",
-      "name": "Wan 2.5 Preview",  // ← Matches Venice filename
-      "speed": "Fastest"
+      "name": "Wan 2.5 Preview"  // ← Matches Venice filename
     },
     {
       "id": "veo-3",
-      "name": "Veo 3 Fast",        // ← Matches Venice filename
-      "speed": "Fast"
+      "name": "Veo 3 Fast"        // ← Matches Venice filename
     }
   ]
 }

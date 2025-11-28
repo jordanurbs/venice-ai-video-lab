@@ -69,7 +69,6 @@ videos/
     {
       "id": "kling",
       "name": "Kling v2",
-      "speed": "Fast",
       "color": "#C8E3FD"
     }
   ]
@@ -193,36 +192,25 @@ The setup script will:
   {
     "id": "wan-2-5",
     "name": "Wan 2.5 Preview",
-    "speed": "Fastest",
     "color": "#C8E3FD"
   },
   {
     "id": "veo-3",
     "name": "Veo 3 Fast",
-    "speed": "Fast",
     "color": "#98D8C8"
   },
   {
     "id": "sora-2",
     "name": "Sora 2",
-    "speed": "Slow",
     "color": "#FFB366"
   },
   {
     "id": "kling-2",
     "name": "Kling 2.0",
-    "speed": "Medium",
     "color": "#F7C8E0"
   }
 ]
 ```
-
-### Speed Options
-- `"Fastest"` - Green badge
-- `"Fast"` - Cyan badge
-- `"Medium"` - Yellow badge
-- `"Slow"` - Orange badge
-- `"Slowest"` - Red badge
 
 ### Complete Example
 
@@ -253,25 +241,21 @@ Here's a full `config.json` showing all fields together:
     {
       "id": "wan-2-5",
       "name": "Wan 2.5 Preview",
-      "speed": "Fastest",
       "color": "#C8E3FD"
     },
     {
       "id": "veo-3",
       "name": "Veo 3 Fast",
-      "speed": "Fast",
       "color": "#98D8C8"
     },
     {
       "id": "sora-2",
       "name": "Sora 2",
-      "speed": "Slow",
       "color": "#FFB366"
     },
     {
       "id": "kling-2",
       "name": "Kling 2.0",
-      "speed": "Medium",
       "color": "#F7C8E0"
     }
   ]
@@ -314,13 +298,11 @@ Edit `config.json` to match your scenes and models:
   "models": [
     {
       "id": "wan-2-5",
-      "name": "Wan 2.5 Preview",  // Matches filename
-      "speed": "Fastest"
+      "name": "Wan 2.5 Preview"  // Matches filename
     },
     {
       "id": "veo-3",
-      "name": "Veo 3 Fast",        // Matches filename
-      "speed": "Fast"
+      "name": "Veo 3 Fast"        // Matches filename
     }
   ]
 }

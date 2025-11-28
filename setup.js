@@ -167,21 +167,37 @@ function scanVideosDirectory(config) {
 
     // Find videos in scene folder
     const files = fs.readdirSync(sceneFolder);
-    // Auto-append .mp4 extension if missing (users may copy exact text from Venice)
+
+    // FIX: Use actual filenames from disk instead of modifying them in memory
+    // Venice exports videos without .mp4 extensions (e.g., "Wan 2.5 Preview  136.68s")
+    // Previously, code appended .mp4 in memory, but files on disk had no extension → 404 errors
+    // Now: Accept files AS-IS whether they have .mp4/.mov or no extension
     const videoFiles = files
-      .map(f => {
-        // If file has no extension, add .mp4
-        if (!f.match(/\.(mp4|mov)$/i)) {
-          return f + '.mp4';
-        }
-        return f;
-      })
-      .filter(f => f.match(/\.(mp4|mov)$/i));
+      .filter(f => {
+        // Skip system/hidden files
+        if (f.startsWith('.') || f === 'README.md') return false;
+
+        // Accept files with video extensions
+        if (f.match(/\.(mp4|mov)$/i)) return true;
+
+        // Accept files with no extension (Venice downloads without .mp4)
+        // Check: no extension means no dot, or ends with 's' (generation time format like "136.68s")
+        if (!f.includes('.') || f.match(/\d+\.?\d*s$/i)) return true;
+
+        return false;
+      });
 
     if (videoFiles.length === 0) {
       videoData.warnings.push(`No video files found in: ${scene.folder}`);
       return;
     }
+
+    // Debug logging: show detected videos
+    log(`  Found ${videoFiles.length} video(s) in ${scene.folder}:`, 'info');
+    videoFiles.forEach(f => {
+      const hasExt = f.match(/\.(mp4|mov)$/i);
+      log(`    ${hasExt ? '✓' : '○'} ${f}${hasExt ? '' : ' (no extension)'}`, 'info');
+    });
 
     // Match videos to models
     const sceneVideos = {};
@@ -191,8 +207,9 @@ function scanVideosDirectory(config) {
       // Try to find video file for this model (enhanced fuzzy matching)
       const videoFile = videoFiles.find(file => {
         // Remove time pattern (e.g., "192.79s") and extension for matching
+        // Handle both "136.68s.mp4" and "136.68s" (no extension)
         const nameWithoutExt = file
-          .replace(/\s+\d+\.?\d*\s*s\.(mp4|mov)$/i, '')
+          .replace(/\s+\d+\.?\d*\s*s(?:\.(mp4|mov))?$/i, '')
           .toLowerCase();
         const modelId = model.id.toLowerCase();
         const modelName = model.name.toLowerCase();
@@ -211,8 +228,9 @@ function scanVideosDirectory(config) {
       });
 
       if (videoFile) {
-        // Parse generation time from filename (e.g., "Wan 2.5 Preview  192.79s.mp4" → 192.79)
-        const timeMatch = videoFile.match(/\s+(\d+\.?\d*)\s*s\.(mp4|mov)$/i);
+        // Parse generation time from filename
+        // Handles both "192.79s.mp4" and "192.79s" (no extension)
+        const timeMatch = videoFile.match(/\s+(\d+\.?\d*)\s*s(?:\.(mp4|mov))?$/i);
         const generationTime = timeMatch ? parseFloat(timeMatch[1]) : null;
 
         sceneVideos[model.id] = {
@@ -406,7 +424,6 @@ function generateSite(config, videoData) {
       const model = config.models.find(m => m.id === modelId);
       const videoInfo = scene.videos[modelId];
       const videoPath = `../../${VIDEOS_DIR}/${scene.folder}/${videoInfo.filename}`;
-      const speedClass = model.speed ? model.speed.toLowerCase().replace(/\s+/g, '-') : '';
 
       return `
         <div class="video-cell" data-model="${modelId}"${videoInfo.generationTime ? ` data-gen-time="${videoInfo.generationTime}"` : ''}>
@@ -414,7 +431,6 @@ function generateSite(config, videoData) {
             <source src="${videoPath}" type="video/mp4">
           </video>
           <div class="model-label" style="background-color: ${model.color || '#ccc'}">${model.name}</div>
-          ${model.speed ? `<div class="speed-badge ${speedClass}">${model.speed}</div>` : ''}
           ${videoInfo.generationTime ? `<div class="gen-time-badge">${videoInfo.generationTime.toFixed(2)}s</div>` : ''}
         </div>`;
     }).join('\n');

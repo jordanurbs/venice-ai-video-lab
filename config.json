@@ -24,31 +24,26 @@
     {
       "id": "kling",
       "name": "Kling v2",
-      "speed": "Fast",
       "color": "#C8E3FD"
     },
     {
       "id": "sora",
       "name": "Sora 2 Pro",
-      "speed": "Slow",
       "color": "#FFE8CC"
     },
     {
       "id": "veo-fast",
       "name": "Veo 3.1 Fast",
-      "speed": "Fastest",
       "color": "#D4F0D0"
     },
     {
       "id": "veo-fq",
       "name": "Veo 3.1 FQ",
-      "speed": "Medium",
       "color": "#E0CFFF"
     },
     {
       "id": "wan",
       "name": "Wan 2.5",
-      "speed": "Medium",
       "color": "#FFD6E5"
     }
   ]
